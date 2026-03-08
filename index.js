@@ -313,7 +313,7 @@ function main() {
   admin.initializeApp({ credential: admin.credential.cert(key) });
   log.info("Firebase инициализирован");
 
-  const runEveryHour = process.env.CRON_SCHEDULE || "0 * * * *";
+  const runEveryHour = process.env.CRON_SCHEDULE || "0 0,6-23 * * *"; // каждый час кроме 1–5
   log.info("Планировщик: проверка по cron:", runEveryHour);
 
   if (process.env.RUN_ONCE === "1") {
