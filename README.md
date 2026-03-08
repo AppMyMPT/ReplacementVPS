@@ -1,6 +1,6 @@
-# Сервис проверки замен МПТ (VPS / Docker)
+# Сервис проверки замен для приложения "Мой МПТ" на VPS в Docker
 
-Парсит страницу замен МПТ каждый час (кроме 1:00–5:00), сравнивает с последним состоянием и отправляет FCM-уведомления на устройства, у которых в приложении выбрана соответствующая группа.
+Парсит страницу замен https://mpt.ru/izmeneniya-v-raspisanii/ каждый час (кроме 1:00–5:00), сравнивает с последним состоянием и отправляет FCM-уведомления на устройства, у которых в приложении выбрана соответствующая группа.
 
 ## Требования
 
@@ -53,31 +53,6 @@ docker compose down
 | `LOG_LEVEL` | Уровень логов: `debug`, `info`, `warn`, `error` | `info` |
 | `LOG_DIR` | Папка для лог-файла | `{DATA_DIR}/logs` |
 | `LOG_FILE` | Полный путь к файлу логов (если задан — пишем в файл) | `{LOG_DIR}/service.log` |
-
-## Запуск одной проверки (без cron внутри контейнера)
-
-Удобно, если cron настраиваете на самом хосте:
-
-```bash
-docker compose run --rm -e RUN_ONCE=1 mpt-replacement
-```
-
-Или в `docker-compose.yml` задать `command` и `RUN_ONCE=1`, а на VPS добавить в crontab:
-
-```cron
-0 * * * * cd /path/to/MyMPT/mpt-replacement-service && docker compose run --rm -e RUN_ONCE=1 mpt-replacement
-```
-
-## Только Docker (без Compose)
-
-```bash
-docker build -t mpt-replacement .
-docker run -d --restart unless-stopped \
-  -v /path/to/your/data:/data \
-  -v /path/to/firebase-service-account.json:/app/firebase-service-account.json:ro \
-  -e TZ=Europe/Moscow \
-  mpt-replacement
-```
 
 ## Логирование
 
