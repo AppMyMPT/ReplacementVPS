@@ -274,10 +274,24 @@ async function runCheck() {
         ) {
           try {
             await docRef.delete();
-            log.info("Удалён недействительный токен", docRef.id);
-          } catch (_) { }
+            log.info(
+              "Удалён недействительный токен",
+              device,
+              docRef.id,
+              sendErr.code
+            );
+          } catch (delErr) {
+            log.warn(
+              "Токен недействителен, но не удалось удалить запись",
+              device,
+              docRef.id,
+              sendErr.code,
+              delErr.message
+            );
+          }
+        } else {
+          log.warn("Ошибка отправки FCM", device, docRef.id, sendErr.message, sendErr.code || "");
         }
-        log.warn("Ошибка отправки FCM", device, docRef.id, sendErr.message, sendErr.code || "");
       }
     }
     if (sentCount > 0) {
